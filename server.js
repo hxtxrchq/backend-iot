@@ -69,18 +69,12 @@ app.get('/getSensorData', (req, res) => {
     res.status(200).json(sensorData);
 });
 
-app.post('/controlLEDs', (req, res) => {
-    // Enviar los datos al frontend
-    res.status(200).json(sensorData);
-});
-// Imprimir todas las rutas disponibles en el servidor
+// Imprimir todas las rutas disponibles en el servidor (Solo para propósitos de depuración)
 app._router.stack.forEach(function (middleware) {
     if (middleware.route) { // Si la ruta está definida
         console.log(`${middleware.route.stack[0].method.toUpperCase()} ${middleware.route.path}`);
     }
 });
-
-
 
 // Inicializa el servidor
 app.listen(port, () => {
