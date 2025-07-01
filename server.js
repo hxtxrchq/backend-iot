@@ -69,6 +69,11 @@ app.get('/getSensorData', (req, res) => {
     res.status(200).json(sensorData);
 });
 
+app.post('/controlLEDs', (req, res) => {
+    // Enviar los datos al frontend
+    res.status(200).json(sensorData);
+});
+
 // Inicializa el servidor
 app.listen(port, () => {
     console.log(`Servidor escuchando en el puerto ${port}`);
