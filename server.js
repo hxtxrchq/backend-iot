@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Habilitar CORS para que el frontend pueda hacer peticiones
-app.use(cors());
+app.use(cors());  // Permitir que el frontend acceda a la API
 
 // Almacenar los datos recibidos temporalmente
 let sensorData = {
@@ -67,6 +67,12 @@ app.post('/controlLEDs', (req, res) => {
 app.get('/getSensorData', (req, res) => {
     // Enviar los datos al frontend
     res.status(200).json(sensorData);
+});
+
+// Ruta GET para obtener el estado de los LEDs
+app.get('/getLEDStatus', (req, res) => {
+    // Enviar el estado actual de los LEDs
+    res.status(200).json(ledStatus);
 });
 
 // Imprimir todas las rutas disponibles en el servidor (Solo para propósitos de depuración)
