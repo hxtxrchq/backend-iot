@@ -1,9 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware para poder leer cuerpos JSON
-app.use(express.json());
+app.use(bodyParser.json());
 
 // Ruta por defecto que devuelve un mensaje
 app.get('/', (req, res) => {
