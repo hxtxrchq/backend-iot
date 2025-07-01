@@ -2,9 +2,15 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json());  // Para permitir recibir solicitudes con cuerpo JSON
+// Middleware para poder leer cuerpos JSON
+app.use(express.json());
 
-// Ruta para recibir datos del sensor
+// Ruta por defecto que devuelve un mensaje
+app.get('/', (req, res) => {
+    res.send('Backend corriendo correctamente');
+});
+
+// Ruta POST para recibir datos de los sensores
 app.post('/getSensorData', (req, res) => {
     const { soilHumidity, airHumidity } = req.body;
 
@@ -15,7 +21,7 @@ app.post('/getSensorData', (req, res) => {
     res.status(200).send({ message: 'Datos recibidos correctamente' });
 });
 
-// Iniciar el servidor
+// Inicializa el servidor
 app.listen(port, () => {
-    console.log(`Servidor escuchando en http://localhost:${port}`);
+    console.log(`Servidor escuchando en el puerto ${port}`);
 });
