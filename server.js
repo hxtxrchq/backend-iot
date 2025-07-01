@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');  // Importamos el paquete CORS
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -10,16 +10,15 @@ app.use(bodyParser.json());
 // Habilitar CORS para que el frontend pueda hacer peticiones
 app.use(cors());
 
-// Almacenar los datos recibidos temporalmente
+// Almacenar los datos de los sensores y las señales de los botones
 let sensorData = {
     soilHumidity: 0,
     airHumidity: 0
 };
 
-// Estado de los LEDs (simulación de los LEDs en el backend)
 let ledStatus = {
-    greenLED: false,  // Riego automático
-    redLED: false     // Regar ahora
+    redLED: false,  // LED de "regar ahora"
+    greenLED: false // LED de "riego automático"
 };
 
 // Ruta por defecto que devuelve un mensaje
@@ -27,44 +26,25 @@ app.get('/', (req, res) => {
     res.send('Backend corriendo correctamente');
 });
 
-// Ruta POST para recibir datos de los sensores desde Wokwi
-app.post('/getSensorData', (req, res) => {
-    const { soilHumidity, airHumidity, waterNow, autoWatering } = req.body;
+// Ruta GET para obtener los datos de los sensores
+app.get('/getSensorData', (req, res) => {
+    res.status(200).json(sensorData);
+});
 
-    console.log('Humedad del Suelo:', soilHumidity);
-    console.log('Humedad del Aire:', airHumidity);
+// Ruta POST para recibir los datos de los botones y actualizar los LEDs
+app.post('/controlLEDs', (req, res) => {
+    const { waterNow, autoWatering } = req.body;
+
     console.log('Acción Regar Ahora:', waterNow);
     console.log('Acción Riego Automático:', autoWatering);
 
-    // Almacenar los datos de los sensores
-    sensorData = { soilHumidity, airHumidity };
+    // Almacenar los datos de los botones
+    ledStatus.redLED = waterNow;
+    ledStatus.greenLED = autoWatering;
 
-    // Controlar el estado de los LEDs basado en los valores enviados desde el frontend
-    if (waterNow) {
-        ledStatus.redLED = true;  // Enciende el LED rojo (regar ahora)
-    } else {
-        ledStatus.redLED = false; // Apaga el LED rojo
-    }
-
-    if (autoWatering) {
-        ledStatus.greenLED = true;  // Enciende el LED verde (riego automático)
-    } else {
-        ledStatus.greenLED = false; // Apaga el LED verde
-    }
-
-    // Enviar respuesta de éxito
+    // Devolver los nuevos estados de los LEDs
     res.status(200).send({
-        message: 'Datos recibidos correctamente',
-        sensorData: sensorData,
-        ledStatus: ledStatus // Enviar el estado de los LEDs
-    });
-});
-
-// Ruta GET para enviar los datos al frontend
-app.get('/getSensorData', (req, res) => {
-    // Enviar los datos de los sensores y el estado de los LEDs al frontend
-    res.status(200).json({
-        sensorData: sensorData,
+        message: 'Estado de los LEDs actualizado',
         ledStatus: ledStatus
     });
 });
