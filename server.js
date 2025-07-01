@@ -27,7 +27,16 @@ app.get('/', (req, res) => {
     res.send('Backend corriendo correctamente');
 });
 
-// Ruta POST para recibir datos de los sensores desde Wokwi
+// Ruta GET para enviar los datos de los sensores al frontend
+app.get('/getSensorData', (req, res) => {
+    // Enviar los datos al frontend
+    res.status(200).json({
+        ...sensorData,
+        ledStatus: ledStatus // También enviamos el estado de los LEDs
+    });
+});
+
+// Ruta POST para recibir datos desde el frontend (estado de los LEDs y de los sensores)
 app.post('/getSensorData', (req, res) => {
     const { soilHumidity, airHumidity, waterNow, autoWatering } = req.body; // Recibimos los datos y las acciones
 
@@ -36,7 +45,7 @@ app.post('/getSensorData', (req, res) => {
     console.log('Acción Regar Ahora:', waterNow); // Verificamos el estado de "regar ahora"
     console.log('Acción Riego Automático:', autoWatering); // Verificamos el estado de "riego automático"
 
-    // Almacenar los datos recibidos
+    // Almacenar los datos de los sensores
     sensorData = { soilHumidity, airHumidity };
 
     // Definir el estado de los LEDs según las acciones
@@ -49,15 +58,6 @@ app.post('/getSensorData', (req, res) => {
         soilHumidity: soilHumidity,
         airHumidity: airHumidity,
         ledStatus: ledStatus // Enviamos el estado de los LEDs
-    });
-});
-
-// Ruta GET para enviar los datos al frontend
-app.get('/getSensorData', (req, res) => {
-    // Enviar los datos al frontend
-    res.status(200).json({
-        ...sensorData,
-        ledStatus: ledStatus // También enviamos el estado de los LEDs
     });
 });
 
