@@ -28,14 +28,27 @@ app.post('/getSensorData', (req, res) => {
     console.log('Humedad del Suelo:', soilHumidity);
     console.log('Humedad del Aire:', airHumidity);
 
+    console.log('Acción Regar Ahora:', waterNow); //Agregando esto ahorita
+    console.log('Acción Riego Automático:', autoWatering);//Agregando esto ahorita
+
+    //Agregando esto ahorita
     // Almacenar los datos recibidos
     sensorData = { soilHumidity, airHumidity };
+    let ledStatus = { redLED: false, greenLED: false };
+    if (waterNow) {
+        ledStatus.redLED = true;  // Enciende el LED rojo
+    }
+    if (autoWatering) {
+        ledStatus.greenLED = true;  // Enciende el LED verde
+    }
 
+    
     // Enviar respuesta de éxito
     res.status(200).send({
         message: 'Datos recibidos correctamente',
         soilHumidity: soilHumidity,
-        airHumidity: airHumidity
+        airHumidity: airHumidity,
+        ledStatus: ledStatus //Agregando esto ahorita
     });
 });
 
