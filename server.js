@@ -12,7 +12,7 @@ app.use(cors());  // Permitir que el frontend acceda a la API
 
 // Almacenar los datos recibidos temporalmente
 let sensorData = {
-    soilHumidity: 0,
+    airTemperature: 0,  // Cambié esta variable por airTemperature
     airHumidity: 0
 };
 
@@ -28,18 +28,18 @@ app.get('/', (req, res) => {
 
 // Ruta POST para recibir datos de los sensores desde Wokwi
 app.post('/getSensorData', (req, res) => {
-    const { soilHumidity, airHumidity } = req.body;
+    const { airTemperature, airHumidity } = req.body;  // Cambié soilHumidity por airTemperature
 
-    console.log('Humedad del Suelo:', soilHumidity);
+    console.log('Temperatura del Aire:', airTemperature);  // Cambio en el log
     console.log('Humedad del Aire:', airHumidity);
 
     // Almacenar los datos recibidos
-    sensorData = { soilHumidity, airHumidity };
+    sensorData = { airTemperature, airHumidity };  // Cambié la asignación
 
     // Enviar respuesta de éxito
     res.status(200).send({
         message: 'Datos recibidos correctamente',
-        soilHumidity: soilHumidity,
+        airTemperature: airTemperature,  // Cambié soilHumidity por airTemperature
         airHumidity: airHumidity
     });
 });
@@ -78,11 +78,11 @@ app.get('/getLEDStatus', (req, res) => {
 // Imprimir todas las rutas disponibles en el servidor (Solo para propósitos de depuración)
 app._router.stack.forEach(function (middleware) {
     if (middleware.route) { // Si la ruta está definida
-        console.log(${middleware.route.stack[0].method.toUpperCase()} ${middleware.route.path});
+        console.log(`${middleware.route.stack[0].method.toUpperCase()} ${middleware.route.path}`);
     }
 });
 
 // Inicializa el servidor
 app.listen(port, () => {
-    console.log(Servidor escuchando en el puerto ${port});
+    console.log(`Servidor escuchando en el puerto ${port}`);
 });
