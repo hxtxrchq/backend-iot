@@ -16,11 +16,6 @@ let sensorData = {
     airHumidity: 0
 };
 
-let ledStatus = {
-    redLED: false,
-    greenLED: false
-};
-
 // Ruta por defecto que devuelve un mensaje
 app.get('/', (req, res) => {
     res.send('Backend corriendo correctamente');
@@ -44,35 +39,10 @@ app.post('/getSensorData', (req, res) => {
     });
 });
 
-// Ruta POST para controlar los LEDs (activar/desactivar)
-app.post('/controlLEDs', (req, res) => {
-    const { redLED, greenLED } = req.body;
-
-    console.log('Control de LEDs:');
-    console.log('LED Rojo (Regar Ahora):', redLED);
-    console.log('LED Verde (Riego Automático):', greenLED);
-
-    // Actualizar el estado de los LEDs
-    ledStatus.redLED = redLED;
-    ledStatus.greenLED = greenLED;
-
-    // Enviar la respuesta de los estados de los LEDs
-    res.status(200).send({
-        message: 'Estado de los LEDs actualizado',
-        ledStatus: ledStatus
-    });
-});
-
 // Ruta GET para enviar los datos de los sensores al frontend
 app.get('/getSensorData', (req, res) => {
     // Enviar los datos al frontend
     res.status(200).json(sensorData);
-});
-
-// Ruta GET para obtener el estado de los LEDs
-app.get('/getLEDStatus', (req, res) => {
-    // Enviar el estado actual de los LEDs
-    res.status(200).json(ledStatus);
 });
 
 // Imprimir todas las rutas disponibles en el servidor (Solo para propósitos de depuración)
