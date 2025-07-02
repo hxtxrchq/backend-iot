@@ -13,7 +13,8 @@ app.use(cors());  // Permitir que el frontend acceda a la API
 // Almacenar los datos recibidos temporalmente
 let sensorData = {
     airTemperature: 0,  // Cambié esta variable por airTemperature
-    airHumidity: 0
+    airHumidity: 0,
+    soilMoisture: 0 // Estado de la humedad del suelo (0: seco, 1: húmedo)
 };
 
 // Variables para controlar los botones de "Regar ahora" y "Regado automático"
@@ -27,19 +28,21 @@ app.get('/', (req, res) => {
 
 // Ruta POST para recibir datos de los sensores desde Wokwi
 app.post('/getSensorData', (req, res) => {
-    const { airTemperature, airHumidity } = req.body;  // Cambié soilHumidity por airTemperature
+    const { airTemperature, airHumidity, soilMoisture } = req.body;
 
     console.log('Temperatura del Aire:', airTemperature);  // Cambio en el log
     console.log('Humedad del Aire:', airHumidity);
+    console.log('Humedad del Suelo (FC-28):', soilMoisture);
 
     // Almacenar los datos recibidos
-    sensorData = { airTemperature, airHumidity };  // Cambié la asignación
+    sensorData = { airTemperature, airHumidity, soilMoisture };  // Cambié la asignación
 
     // Enviar respuesta de éxito
     res.status(200).send({
         message: 'Datos recibidos correctamente',
-        airTemperature: airTemperature,  // Cambié soilHumidity por airTemperature
-        airHumidity: airHumidity
+        airTemperature: airTemperature,
+        airHumidity: airHumidity,
+        soilMoisture: soilMoisture
     });
 });
 
