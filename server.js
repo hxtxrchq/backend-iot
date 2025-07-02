@@ -34,7 +34,7 @@ app.post('/getSensorData', (req, res) => {
     console.log('Humedad del Aire:', airHumidity);
 
     // Almacenar los datos recibidos
-    sensorData = { soilHumidity, airHumidity };
+    sensorData = { airTemperatura, airHumidity };
 
     // Enviar respuesta de éxito
     res.status(200).send({
