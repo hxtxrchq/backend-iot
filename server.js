@@ -12,7 +12,7 @@ app.use(cors());  // Permitir que el frontend acceda a la API
 
 // Almacenar los datos recibidos temporalmente
 let sensorData = {
-    airTemperatura: 0,
+    soilHumidity: 0,
     airHumidity: 0
 };
 
@@ -28,18 +28,18 @@ app.get('/', (req, res) => {
 
 // Ruta POST para recibir datos de los sensores desde Wokwi
 app.post('/getSensorData', (req, res) => {
-    const { airTemperatura, airHumidity } = req.body;
+    const { soilHumidity, airHumidity } = req.body;
 
-    console.log('Temperatura del Aire:', airTemperatura);
+    console.log('Humedad del Suelo:', soilHumidity);
     console.log('Humedad del Aire:', airHumidity);
 
     // Almacenar los datos recibidos
-    sensorData = { airTemperatura, airHumidity };
+    sensorData = { soilHumidity, airHumidity };
 
     // Enviar respuesta de éxito
     res.status(200).send({
         message: 'Datos recibidos correctamente',
-        airTemperatura: airTemperatura,
+        soilHumidity: soilHumidity,
         airHumidity: airHumidity
     });
 });
