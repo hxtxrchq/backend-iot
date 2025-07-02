@@ -20,6 +20,7 @@ let sensorData = {
 // Variables para controlar los botones de "Regar ahora" y "Regado automático"
 let waterNow = false;
 let autoWatering = false;
+let wateringInProgress = false; // Estado para evitar riego continuo
 
 // Ruta por defecto que devuelve un mensaje
 app.get('/', (req, res) => {
@@ -35,7 +36,7 @@ app.post('/getSensorData', (req, res) => {
     console.log('Humedad del Suelo (FC-28):', soilMoisture);
 
     // Almacenar los datos recibidos
-    sensorData = { airTemperature, airHumidity, soilMoisture };  // Cambié la asignación
+    sensorData = { airTemperature, airHumidity, soilMoisture };
 
     // Enviar respuesta de éxito
     res.status(200).send({
@@ -48,15 +49,30 @@ app.post('/getSensorData', (req, res) => {
 
 // Ruta POST para recibir la señal de "Regar ahora"
 app.post('/controlWaterNow', (req, res) => {
+    if (wateringInProgress) {
+        return res.status(400).send({ message: 'El riego ya está en progreso, espera a que termine.' });
+    }
+
     waterNow = true;  // Activar la señal de "regar ahora"
     autoWatering = false;  // Desactivar riego automático
+    wateringInProgress = true;  // Marcar que el riego está en progreso
+
     res.status(200).send({ message: 'Regar ahora activado' });
+
+    // Desactivar la señal de "regar ahora" después de 1 segundo
+    setTimeout(() => {
+        waterNow = false;
+        wateringInProgress = false;  // Reiniciar estado de riego
+        console.log('Riego manual completado.');
+    }, 1000); // Ajusta el tiempo de riego si es necesario
 });
 
 // Ruta POST para recibir la señal de "Regado automático"
 app.post('/controlAutoWatering', (req, res) => {
     autoWatering = true;  // Activar riego automático
     waterNow = false;  // Desactivar "regar ahora"
+    wateringInProgress = false;  // Asegurar que el riego no esté en progreso
+
     res.status(200).send({ message: 'Regado automático activado' });
 });
 
