@@ -16,6 +16,10 @@ let sensorData = {
     airHumidity: 0
 };
 
+// Variables para controlar los botones de "Regar ahora" y "Regado automático"
+let waterNow = false;
+let autoWatering = false;
+
 // Ruta por defecto que devuelve un mensaje
 app.get('/', (req, res) => {
     res.send('Backend corriendo correctamente');
@@ -36,6 +40,28 @@ app.post('/getSensorData', (req, res) => {
         message: 'Datos recibidos correctamente',
         airTemperature: airTemperature,  // Cambié soilHumidity por airTemperature
         airHumidity: airHumidity
+    });
+});
+
+// Ruta POST para recibir la señal de "Regar ahora"
+app.post('/controlWaterNow', (req, res) => {
+    waterNow = true;  // Activar la señal de "regar ahora"
+    autoWatering = false;  // Desactivar riego automático
+    res.status(200).send({ message: 'Regar ahora activado' });
+});
+
+// Ruta POST para recibir la señal de "Regado automático"
+app.post('/controlAutoWatering', (req, res) => {
+    autoWatering = true;  // Activar riego automático
+    waterNow = false;  // Desactivar "regar ahora"
+    res.status(200).send({ message: 'Regado automático activado' });
+});
+
+// Ruta GET para obtener el estado de los botones (usado por el ESP32)
+app.get('/getLEDStatus', (req, res) => {
+    res.status(200).json({
+        waterNow: waterNow,
+        autoWatering: autoWatering
     });
 });
 
